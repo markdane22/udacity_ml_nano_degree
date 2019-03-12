@@ -1,0 +1,285 @@
+======================================-
+
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LineaerRegression
+from sklearn.metrics import accuracy_score
+
+
+classifier = LinearRegression()
+classifier.fit(X,y)
+
+guesses = classifier.predict(X)
+
+error = mean_absolute_error(y, guesses)
+error = mean_squared_error(y, guesses)
+acc = accuracy_score(y, guesses)
+
+===================================-
+
+From sklearn.metrics import r2_score
+
+y_true = [1, 2, 4]
+y_prediction = [1.3, 2.5, 3.7]
+
+r2_score(y_true, y_prediction)
+
+========================================-
+
+
+import numpy as np
+import pandas as pd
+from IPython.display import display # Allows the use of display() for DataFrames
+
+# Pretty display for notebooks
+%matplotlib inline
+
+# Load the dataset
+in_file = 'titanic_data.csv'
+full_data = pd.read_csv(in_file)
+
+# Print the first few entries of the RMS Titanic data
+display(full_data.head())
+
+# Store the 'Survived' feature in a new variable and remove it from the dataset
+outcomes = full_data['Survived']
+data = full_data.drop('Survived', axis = 1)
+
+# Show the new dataset with 'Survived' removed
+display(data.head())
+
+======================================-
+# SPLIT : 
+
+# Reading the csv file
+import pandas as pd
+data = pd.read_csv("data.csv")
+
+# Splitting the data into X and y
+import numpy as np
+X = np.array(data[['x1', 'x2']])
+y = np.array(data['y'])
+
+# Import statement for train_test_split
+    
+
+# TODO: Use the train_test_split function to split the data into
+# training and testing sets.
+# The size of the testing set should be 20% of the total size of the data.
+# Your output should contain 4 objects.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, random_state=1)
+
+
+========================================-
+
+Logistic Regression
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression()
+
+Neural Networks
+from sklearn.neural_network import MLPClassifier
+classifier = MLPClassifier()
+
+Decision Trees
+from sklearn.tree import DecisionTreeClassifier
+classifier = DecisionTreeClassifier(max_depth=5, min_samples_leaf=17)
+
+Support Vector Machines
+from sklearn.svm import SVC
+classifier = SVC()
+#Tuned : 
+classifier = SVC(kernel = 'poly', degree = 2, gamma = None, C = None)
+
+Then : 
+classifier = LogisticRegression()
+classifier.fit(X,y)
+
+=================================================-
+
+GridSearch for SVM : 
+from sklearn.model_selection import GridSearchCV
+#Here we pick what are the parameters we want to choose from, and form a dictionary. In this dictionary, the keys will be the names of the parameters, and the values will be the lists of possible values for each parameter.
+
+parameters = {'kernel':['poly', 'rbf'],'C':[0.1, 1, 10]}
+
+#Create Scorer: We need to decide what metric we'll use to score each of the candidate models. In here, we'll use F1 Score.
+
+from sklearn.metrics import make_scorer
+from sklearn.metrics import f1_score
+scorer = make_scorer(f1_score)
+
+# Create the object.
+grid_obj = GridSearchCV(clf, parameters, scoring=scorer)
+
+# Fit the data
+grid_fit = grid_obj.fit(X, y)
+
+best_clf = grid_fit.best_estimator_
+
+===========================================================-
+
+Logistics regression : 
+
+# TODO: Add import statements
+import pandas as pd
+import numpy as np
+
+
+# Assign the dataframe to this variable.
+# TODO: Load the data
+bmi_life_data = pd.read_csv("bmi_and_life_expectancy.csv") 
+y_values = np.array(bmi_life_data[['Life expectancy']])
+x_values = np.array(bmi_life_data[['BMI']])
+
+#print("y_values: ", len(y_values))
+#print("x_values: ", len(x_values))
+
+
+# Make and fit the linear regression model
+#TODO: Fit the model and Assign it to bmi_life_model
+from sklearn.linear_model import LinearRegression
+bmi_life_model = LinearRegression()
+bmi_life_model.fit(x_values, y_values)
+
+# Make a prediction using the model
+# TODO: Predict life expectancy for a BMI value of 21.07931
+laos_life_exp = bmi_life_model.predict([[21.07931]])
+
+==================================================================================-
+Grid Search - Decision trees : 
+
+from sklearn.model_selection import GridSearchCV
+parameters = {'max_depth':[5,6,7,8,9],'min_samples_leaf':[4,5,6,7,8,],'min_samples_split':[8,9,10]}
+from sklearn.metrics import make_scorer
+from sklearn.metrics import f1_score
+from sklearn.metrics import fbeta_score
+
+scorer = make_scorer(f1_score)
+scorer = make_scorer(fbeta_score, beta=0.5)
+
+grid_obj = GridSearchCV(model, parameters, scoring=scorer)
+grid_fit = grid_obj.fit(X_train, y_train)
+best_clf = grid_fit.best_estimator_
+print(best_clf)
+
+# TODO: Make predictions
+y_train_pred = grid_fit.predict(X_train)
+y_test_pred = grid_fit.predict(X_test)
+
+# TODO: Calculate the accuracy
+from sklearn.metrics import accuracy_score
+train_accuracy = accuracy_score(y_train, y_train_pred)
+test_accuracy = accuracy_score(y_test, y_test_pred)
+print('The training accuracy is', train_accuracy)
+print('The test accuracy is', test_accuracy)
+
+==================================================-
+Data Processing : 
+
+Read table with label : 
+df = pd.read_table('smsspamcollection/SMSSpamCollection',names=['label', 'sms_message'])
+
+Convert column to numeric values : preprocessing
+df['label'] = df.label.map(lambda x : 1 if(x == 'SPAM') else 0)
+
+Make data lowercase : 
+documents = ['Hello, how are you!',
+             'Win money, win from home.',
+             'Call me now.',
+             'Hello, Call hello you tomorrow?']
+
+lower_case_documents = []
+for i in documents:
+    lower_case_documents.append(i.lower())
+print(lower_case_documents)
+
+Remove punctuations : 
+sans_punctuation_documents = []
+import string
+for i in lower_case_documents:
+    sans_punctuation_documents.append(i.translate(str.maketrans('','',string.punctuation)))
+print(sans_punctuation_documents)
+
+Split words/Tokenising : 
+preprocessed_documents = []
+for i in sans_punctuation_documents:
+    preprocessed_documents.append(i.split(" "))
+print(preprocessed_documents)
+
+Count frequencies : 
+frequency_list = []
+import pprint
+from collections import Counter
+for i in preprocessed_documents:
+    frequency_list.append(Counter(i))
+pprint.pprint(frequency_list)
+
+=================================================-
+Data processing using CountVectorizer 
+from sklearn.feature_extraction.text import CountVectorizer
+count_vector = CountVectorizer()
+print(count_vector)       # To print default values of tokenizer, token_pattern, lowerCase=true etc
+# Fit the existing documents to counterVector
+count_vector.fit(documents)
+# Get all the columns
+count_vector.get_feature_names()
+# Create matrix with rows as document entries and columns as words and value of individual cells will be freqeuncy
+doc_array = count_vector.transform(documents).toarray()
+print(doc_array)
+# Load this to data frame with column name as features : 
+frequency_matrix = pd.DataFrame(doc_array, columns=count_vector.get_feature_names())
+frequency_matrix
+
+==============================================-
+Naive Bayes
+from sklearn.naive_bayes import MultinomialNB
+naive_bayes = MultinomialNB()
+naive_bayes.fit(training_data, y_train)
+predictions = naive_bayes.predict(testing_data)
+
+===============================================-
+Accuracy tests : 
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score,fbeta_score
+print('Accuracy score: ', format(accuracy_score(y_test, predictions)))
+print('Precision score: ', format(precision_score(y_test, predictions)))
+print('Recall score: ', format(recall_score(y_test, predictions)))
+print('F1 score: ', format(f1_score(y_test, predictions)))
+print('Fbeta score: ', format(fbeta_score(y_test, predictions, beta=0.5)))
+
+
+=================================================-=
+AdaBoost 
+from sklearn.ensemble import AdaBoostClassifier
+model = AdaBoostClassifier()
+model.fit(x_train, y_train)
+model.predict(x_test)
+
+from sklearn.tree import DecisionTreeClassifier
+model = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth=2), n_estimators = 4)
+
+=================================================-
+Create classification of categorical variable  : 
+income = data.incom.map({'<=50K':0, '>50K':1})
+
+One hot encoding : 
+features_final = pd.get_dummies(features_log_minmax_transform)
+
+===================================================-
+Minmax scalar : 
+# Import sklearn.preprocessing.StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+
+# Initialize a scaler, then apply it to the features
+scaler = MinMaxScaler() # default=(0, 1)
+numerical = ['age', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week']
+
+features_log_minmax_transform = pd.DataFrame(data = features_log_transformed)
+features_log_minmax_transform[numerical] = scaler.fit_transform(features_log_transformed[numerical])
+
+# Show an example of a record with scaling applied
+display(features_log_minmax_transform.head(n = 5))
+
+======================================================-
+
+
+
